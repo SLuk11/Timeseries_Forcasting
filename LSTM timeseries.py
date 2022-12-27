@@ -22,7 +22,7 @@ def to_sequences(dataset,lookback):
 
     return np.array(x), np.array(y)
 
-Data_path = "C:/Users/ideapad/Desktop/Luk_work/TUxSA/IS/weather data/weather_training_data_0921_0322.xlsx"
+Data_path = "__________________________________.xlsx"
 future = 12
 alldata = pd.read_excel(Data_path, sheet_name='model data every 30 min').iloc[0:13903-future] #test train till date before future else for validate till 13903 (220616_1500)
 Data = alldata.drop(['Date','Time'], axis=1)
@@ -82,61 +82,61 @@ print('Train Score: %.2f RMSE' % (trainScore))
 testScore = math.sqrt(mean_squared_error(testY_inv, testPredict_inv))
 print('Test Score: %.2f RMSE' % (testScore))
 
-# #Train Test Plot
-# trainPredictPlot = np.empty_like(Traindata)
-# trainPredictPlot[:, :] = np.nan
-# train_prediction_inv = trainPredict_inv.reshape(-1,1)
-# trainPredictPlot[lookback_step:lookback_step + len(train_prediction_inv), :] = train_prediction_inv
-# dfTrain = pd.concat([DT_comb, pd.Series(trainPredictPlot[:,0])], axis=1)
-# dfTrain['Date'] = pd.to_datetime(dfTrain['Date'])
-# dfTrain.set_index('Date', inplace=True)
-#
-# testPredictPlot = np.empty_like(Traindata)
-# testPredictPlot[:, :] = np.nan
-# test_prediction_inv = testPredict_inv.reshape(-1,1)
-# testPredictPlot[len(train) + lookback_step:len(train)+ lookback_step+len(test_prediction_inv), :] = test_prediction_inv
-# dfTest = pd.concat([DT_comb, pd.Series(testPredictPlot[:,0])], axis=1)
-# dfTest['Date'] = pd.to_datetime(dfTest['Date'])
-# dfTest.set_index('Date', inplace=True)
-#
-# plt.plot(Traindata['Out Hum'])
-# plt.plot(dfTrain)
-# plt.plot(dfTest)
-# plt.show()
+#Train Test Plot
+trainPredictPlot = np.empty_like(Traindata)
+trainPredictPlot[:, :] = np.nan
+train_prediction_inv = trainPredict_inv.reshape(-1,1)
+trainPredictPlot[lookback_step:lookback_step + len(train_prediction_inv), :] = train_prediction_inv
+dfTrain = pd.concat([DT_comb, pd.Series(trainPredictPlot[:,0])], axis=1)
+dfTrain['Date'] = pd.to_datetime(dfTrain['Date'])
+dfTrain.set_index('Date', inplace=True)
 
-# #forecast
-# prediction = [] #Empty list to populate later with predictions
-# current_batch = test_scaled[-lookback_step:] #Final data points in dataset
-# current_batch = current_batch.reshape(1, 1,lookback_step) #Reshape
-#
-# for i in range(future):
-#     current_pred = model.predict(current_batch)[0]
-#     prediction.append(current_pred)
-#     current_batch = np.append(current_batch[:,:,1:],[[current_pred]],axis=2)
-# prediction_inverse = scaler.inverse_transform(prediction)
-# #prediction_inverse = np.delete(prediction_inverse, -1)
-#
-# future_data = pd.read_excel(Data_path, sheet_name='model data every 30 min').iloc[13903-future:13903]
-# Data_f = future_data.drop(['Date','Time'], axis=1)
-# Date_f = pd.DataFrame(future_data['Date'].astype(str), columns=['Date'])
-# Time_f = pd.DataFrame(future_data['Time'].astype(str), columns=['Time'])
-# Date_f.Date.str.replace('/', '-')
-# DT_comb_f = Date_f.Date.str.cat(Time_f.Time, sep=' ')
-# fdata = pd.concat([DT_comb_f, Data_f], axis=1)
-# fdata['Date'] = pd.to_datetime(fdata['Date'])
-# fdata.set_index('Date', inplace=True)
-# f_col_set = future_data[{'Out Hum'}]
-# F_data = pd.concat([f_col_set], axis=1)
-# F_data.index = fdata.index
-#
-# futurePredictPlot = pd.DataFrame(prediction_inverse, columns=['Out Hum'])
-# futurePredictPlot.index = F_data.index
-#
-# predScore = math.sqrt(mean_squared_error(F_data, futurePredictPlot))
-# print('Prediction Score: %.2f RMSE' % (predScore))
-# print("Future Prediction")
-# print(futurePredictPlot)
-#
-# plt.plot(F_data)
-# plt.plot(futurePredictPlot)
-# plt.show()
+testPredictPlot = np.empty_like(Traindata)
+testPredictPlot[:, :] = np.nan
+test_prediction_inv = testPredict_inv.reshape(-1,1)
+testPredictPlot[len(train) + lookback_step:len(train)+ lookback_step+len(test_prediction_inv), :] = test_prediction_inv
+dfTest = pd.concat([DT_comb, pd.Series(testPredictPlot[:,0])], axis=1)
+dfTest['Date'] = pd.to_datetime(dfTest['Date'])
+dfTest.set_index('Date', inplace=True)
+
+plt.plot(Traindata['Out Hum'])
+plt.plot(dfTrain)
+plt.plot(dfTest)
+plt.show()
+
+#forecast
+prediction = [] #Empty list to populate later with predictions
+current_batch = test_scaled[-lookback_step:] #Final data points in dataset
+current_batch = current_batch.reshape(1, 1,lookback_step) #Reshape
+
+for i in range(future):
+    current_pred = model.predict(current_batch)[0]
+    prediction.append(current_pred)
+    current_batch = np.append(current_batch[:,:,1:],[[current_pred]],axis=2)
+prediction_inverse = scaler.inverse_transform(prediction)
+#prediction_inverse = np.delete(prediction_inverse, -1)
+
+future_data = pd.read_excel(Data_path, sheet_name='model data every 30 min').iloc[13903-future:13903]
+Data_f = future_data.drop(['Date','Time'], axis=1)
+Date_f = pd.DataFrame(future_data['Date'].astype(str), columns=['Date'])
+Time_f = pd.DataFrame(future_data['Time'].astype(str), columns=['Time'])
+Date_f.Date.str.replace('/', '-')
+DT_comb_f = Date_f.Date.str.cat(Time_f.Time, sep=' ')
+fdata = pd.concat([DT_comb_f, Data_f], axis=1)
+fdata['Date'] = pd.to_datetime(fdata['Date'])
+fdata.set_index('Date', inplace=True)
+f_col_set = future_data[{'Out Hum'}]
+F_data = pd.concat([f_col_set], axis=1)
+F_data.index = fdata.index
+
+futurePredictPlot = pd.DataFrame(prediction_inverse, columns=['Out Hum'])
+futurePredictPlot.index = F_data.index
+
+predScore = math.sqrt(mean_squared_error(F_data, futurePredictPlot))
+print('Prediction Score: %.2f RMSE' % (predScore))
+print("Future Prediction")
+print(futurePredictPlot)
+
+plt.plot(F_data)
+plt.plot(futurePredictPlot)
+plt.show()
