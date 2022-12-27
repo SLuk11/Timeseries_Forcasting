@@ -69,7 +69,7 @@ def Impotance_CART(Xs, Traget):
     print(' ')
     return
 
-Data_path = "C:/Users/ideapad/Desktop/Luk_work/TUxSA/IS/weather data/weather_training_data_0921_0322.xlsx"
+Data_path = "____________.xlsx"
 alldata = pd.read_excel(Data_path, sheet_name='model data every30min').iloc[0:10178]
 DateTime = pd.DataFrame(alldata["Date"].astype(str)+ "_" + alldata["Time"].astype(str), columns=['DateTime'])
 Data = (alldata.drop(['Date','Time'], axis=1)).astype(float)
