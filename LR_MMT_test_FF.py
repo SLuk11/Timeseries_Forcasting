@@ -28,7 +28,7 @@ def FFmodel(learning_rate=0.01, momentum=0.1):
     model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['acc'])
     return model
 
-Data_path = "C:/Users/ideapad/Desktop/Luk_work/TUxSA/IS/weather data/weather_training_data_0921_0322.xlsx"
+Data_path = "________________________.xlsx"
 future = 12
 alldata = pd.read_excel(Data_path, sheet_name='model data every 30 min').iloc[0:13903-future] #test train till date before future else for validate till 13903 (220616_1500)
 Traget = ((alldata['Out Hum'].values).astype('float32')).reshape(-1, 1)
@@ -59,9 +59,6 @@ stds = grid_result.cv_results_['std_test_score']
 params = grid_result.cv_results_['params']
 for mean, stdev, param in zip(means, stds, params):
     print("Mean = %f (std=%f) with: %r" % (mean, stdev, param))
-
-
-
 
 # #--- counf plot
 # result_array = np.zeros([3, len(params)])
