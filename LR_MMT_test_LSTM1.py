@@ -28,7 +28,7 @@ def LSTM1model(learning_rate=0.01, momentum=0.1):
     model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['acc'])
     return model
 
-Data_path = "C:/Users/ideapad/Desktop/Luk_work/TUxSA/IS/weather data/weather_training_data_0921_0322.xlsx"
+Data_path = "________________.xlsx"
 future = 12
 alldata = pd.read_excel(Data_path, sheet_name='model data every 30 min').iloc[0:13903-future] #test train till date before future else for validate till 13903 (220616_1500)
 Data = alldata.drop(['Date','Time'], axis=1)
